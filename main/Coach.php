@@ -10,7 +10,7 @@ class Coach {
     }
 
     public function readAllBySpecialization() {
-        $query = "SELECT coach_id, name, description, start_time
+        $query = "SELECT coach_id, name, description, start_time, activity_id
                   FROM view_coaches_by_specialization
                   WHERE specialization_id = ?
                   ORDER BY start_time";

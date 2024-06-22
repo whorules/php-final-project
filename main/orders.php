@@ -46,17 +46,30 @@ $specializationsStmt->closeCursor();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
+            const updateCoachOptions = (data) => {
+                const coaches = JSON.parse(data).coaches;
+                const options = coaches.map(coach =>
+                    `<option value="${coach.coach_id}" data-activity-id="${coach.activity_id}">
+                        ${coach.name} — ${coach.description} (${coach.start_time})
+                    </option>`).join('');
+                $('#coach').html(options).prop('disabled', false);
+                $('#activity_id').val(coaches[0]?.activity_id || '');
+            };
+
             $('#specialization').change(function () {
-                var specializationId = $(this).val();
-                $.ajax({
-                    url: 'get_coaches.php',
-                    type: 'POST',
-                    data: {specialization_id: specializationId},
-                    success: function (data) {
-                        $('#coach').html(data);
-                        $('#coach').prop('disabled', false);
-                    }
-                });
+                const specializationId = $(this).val();
+                $.post('get_coaches.php', { specialization_id: specializationId }, updateCoachOptions);
+            });
+
+            $('#coach').change(function() {
+                $('#activity_id').val($(this).find('option:selected').data('activity-id'));
+            });
+
+            $('#registration-form').submit(function(e) {
+                if (!$('#activity_id').val()) {
+                    e.preventDefault();
+                    alert('Please select a coach.');
+                }
             });
         });
     </script>
@@ -143,6 +156,7 @@ $specializationsStmt->closeCursor();
                                 <label for="date">Дата:</label>
                                 <input type="date" id="date" name="date" required>
                             </div>
+                            <input type="hidden" id="activity_id" name="activity_id">
                             <button type="submit">Записаться</button>
                         </form>
                     </div>

@@ -35,5 +35,25 @@ class Registration {
         return $stmt;
     }
 
+    public function readAll() {
+        $query = "SELECT
+                    r.registration_id,
+                    r.registration_date,
+                    r.status,
+                    a.activity_name,
+                    a.start_time,
+                    a.end_time,
+                    u.username
+                  FROM " . $this->table_name . " r
+                  JOIN activities a ON r.activity_id = a.activity_id
+                  JOIN users u ON r.user_id = u.user_id
+                  ORDER BY r.registration_date";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
 }
 ?>

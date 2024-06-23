@@ -8,10 +8,10 @@ class Database {
     public $conn;
 
     public function __construct() {
-        $this->host = getenv('DB_HOST') ?: '127.0.0.1';
-        $this->db_name = getenv('DB_DATABASE') ?: 'php_final_project';
-        $this->username = getenv('DB_USERNAME') ?: 'root';
-        $this->password = getenv('DB_PASSWORD') ?: 'password';
+        $this->host = 'sql5.freemysqlhosting.net';
+        $this->db_name = 'sql5715665';
+        $this->username = 'sql5715665';
+        $this->password = 'ZKSlbYLkk1';
     }
 
     public function getConnection() {
@@ -25,6 +25,4 @@ class Database {
         }
         return $this->conn;
     }
-
 }
-?>

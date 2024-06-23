@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 class Registration {
     private $conn;
     private $table_name = "registrations";
@@ -48,7 +49,6 @@ class Registration {
                   JOIN activities a ON r.activity_id = a.activity_id
                   JOIN users u ON r.user_id = u.user_id
                   ORDER BY r.registration_date";
-
         $stmt = $this->conn->prepare($query);
 
         $stmt->execute();

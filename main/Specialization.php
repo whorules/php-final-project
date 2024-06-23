@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 class Specialization {
     private $conn;
     private $table_name = "specializations";

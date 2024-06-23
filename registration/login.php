@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 include('server.php');
 if (!isset($_SESSION['user_id'])) {
     $loggedIn = false;
@@ -9,8 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Fitness Club</title>
     <meta charset="utf-8">
+    <title>Fitness Club</title>
     <link rel="stylesheet" type="text/css" media="screen" href="../css/reset.css">
     <link rel="stylesheet" type="text/css" media="screen" href="../css/style.css">
     <link rel="stylesheet" type="text/css" media="screen" href="style.css">

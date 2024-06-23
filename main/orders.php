@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../registration/login.php');
@@ -128,6 +129,8 @@ $specializationsStmt->closeCursor();
                             <?php endforeach; ?>
                             </tbody>
                         </table>
+                    <br><br>
+                    <button onclick="window.location.href='download_orders.php'">Скачать записи</button>
                     <?php else: ?>
                         <p>Вы еще никуда не записаны</p>
                     <?php endif; ?>

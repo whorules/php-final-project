@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 include('db.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['records'])) {
@@ -17,12 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['records'])) {
     $query = "DELETE FROM registrations WHERE registration_id IN ($placeholders)";
     $stmt = $db->prepare($query);
 
-    // Привязка параметров
     foreach ($records as $index => $record) {
         $stmt->bindValue(($index + 1), $record, PDO::PARAM_INT);
     }
 
-    // Выполнение запроса
     if ($stmt->execute()) {
         echo "Записи успешно удалены";
     } else {

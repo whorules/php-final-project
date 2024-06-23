@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -27,6 +28,19 @@ $hasRecords = count($registrations) > 0;
 
 $specialization = new Specialization($db);
 $specializations = $specialization->readAll()->fetchAll(PDO::FETCH_ASSOC);
+
+$topActivitiesQuery = "
+    SELECT a.activity_name, COUNT(r.registration_id) AS registration_count
+    FROM registrations r
+    JOIN activities a ON r.activity_id = a.activity_id
+    GROUP BY a.activity_id
+    ORDER BY registration_count DESC
+    LIMIT 5
+";
+
+$topActivitiesStmt = $db->prepare($topActivitiesQuery);
+$topActivitiesStmt->execute();
+$topActivities = $topActivitiesStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +52,7 @@ $specializations = $specialization->readAll()->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/grid_12.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function () {
             function changeStatus(newStatus) {
@@ -69,6 +84,28 @@ $specializations = $specialization->readAll()->fetchAll(PDO::FETCH_ASSOC);
             $('#cancel-status').click(function() {
                 changeStatus('cancelled');
             });
+
+            const ctx = document.getElementById('topActivitiesChart').getContext('2d');
+            const topActivitiesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: <?php echo json_encode(array_column($topActivities, 'activity_name')); ?>,
+                    datasets: [{
+                        label: 'Количество записей',
+                        data: <?php echo json_encode(array_column($topActivities, 'registration_count')); ?>,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
         });
     </script>
 </head>
@@ -88,7 +125,9 @@ $specializations = $specialization->readAll()->fetchAll(PDO::FETCH_ASSOC);
         <div class="container_12">
             <div class="grid_12">
                 <div class="box-shadow centered-content">
-                    <br>
+                    <div class="chart-container">
+                        <canvas id="topActivitiesChart"></canvas>
+                    </div>
                     <h2>Записи пользователей</h2>
                     <?php if ($hasRecords): ?>
                         <table>

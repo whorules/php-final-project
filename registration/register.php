@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 include('server.php');
 if (!isset($_SESSION['user_id'])) {
     $loggedIn = false;
